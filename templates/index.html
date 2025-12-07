@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Price Predictor</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+        /* Fix dropdown suggestion colors */
+select {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* This controls the dropdown suggestion list */
+select option {
+    color: #000 !important;       /* Black text */
+    background-color: #ffffff;   /* White background */
+}
+
+.footer {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.footer a {
+    color: #00e5ff;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 6px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+    color: #00ffcc;
+}
+
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .glass-card {
+            width: 450px;
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #00e5ff;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #b5f3ff;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 9px;
+            margin-top: 4px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        input:focus, select:focus {
+            border: 1px solid #00e5ff;
+        }
+
+        .btn-predict {
+            margin-top: 18px;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00e5ff, #0077ff);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-predict:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 12px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ff99;
+            border: 1px solid #00ff99;
+            border-radius: 10px;
+            background: rgba(0, 255, 153, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+    <div class="title">🚗 Car Price Prediction</div>
+
+    <form method="POST">
+
+        <div class="form-group">
+            <label>Year</label>
+            <input type="number" name="year" placeholder="e.g. 2019" required>
+        </div>
+
+        <div class="form-group">
+            <label>Kilometers Driven</label>
+            <input type="number" name="kilometers_driven" placeholder="e.g. 45000" required>
+        </div>
+
+        <div class="form-group">
+            <label>Fuel Type</label>
+            <select name="fuel_type" required>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+                <option value="LPG">LPG</option>
+                <option value="Electric">Electric</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Transmission</label>
+            <select name="transmission" required>
+                <option value="Manual">Manual</option>
+                <option value="Automatic">Automatic</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Owner Type</label>
+            <select name="owner_type" required>
+                <option value="First">First</option>
+                <option value="Second">Second</option>
+                <option value="Third">Third</option>
+                <option value="Fourth & Above">Fourth & Above</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Seats</label>
+            <input type="number" step="0.5" name="seats" placeholder="e.g. 5" required>
+        </div>
+
+        <div class="form-group">
+            <label>Mileage (kmpl)</label>
+            <input type="number" step="0.1" name="mileage" placeholder="e.g. 18.5" required>
+        </div>
+
+        <div class="form-group">
+            <label>Engine (CC)</label>
+            <input type="number" name="engine" placeholder="e.g. 1197" required>
+        </div>
+
+        <div class="form-group">
+            <label>Power (bhp)</label>
+            <input type="number" name="power" placeholder="e.g. 82" required>
+        </div>
+
+        <button type="submit" class="btn-predict">Predict Price</button>
+    </form>
+
+    {% if predicted_price is not none %}
+        <div class="result-box">
+            Predicted Price: ₹ {{ predicted_price | round(2) }} Lakh
+        </div>
+    {% endif %}
+
+    <div class="footer">
+        <div class="footer">
+    Built by <b>Sanskar Jadhav</b> |
+    <a href="https://github.com/sanskarjadhav015" target="_blank">GitHub</a> |
+    <a href="https://www.linkedin.com/in/jadhav-sanskar-kishor-722a52258" target="_blank">LinkedIn</a>
+</div>
+
+    </div>
+</div>
+
+</body>
+</html>
